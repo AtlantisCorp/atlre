@@ -105,10 +105,10 @@ namespace Atl
         //! @brief Loads a scene from some parameters.
         //! This function does nothing, but a derived RenderScene class can implement
         //! it to load a scene from a file.
-        virtual std::future < void > load(const Params&) {}
+        virtual std::future < void > load(const Params&) { return {}; }
         
         //! @brief Unloads the scene.
-        virtual std::future < void > unload(const Params&) {}
+        virtual std::future < void > unload(const Params&) { return {}; }
         
         //! @brief Returns the RenderNode's root.
         virtual RenderNodePtr root() const;

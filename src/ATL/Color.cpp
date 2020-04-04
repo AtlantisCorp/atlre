@@ -40,7 +40,7 @@ namespace Atl
         mChannels.all = 0;
     }
 
-    RGBAuColor::RGBAuColor(int8_t r, int8_t g, int8_t b, int8_t a)
+    RGBAuColor::RGBAuColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
     {
         mChannels.red = r;
         mChannels.green = g;

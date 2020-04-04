@@ -19,7 +19,7 @@ project(atl VERSION ${ATL_VERSION})
 find_package(Filesystem REQUIRED COMPONENTS Final Experimental)
 
 # Configure ./Configure.h.
-configure_file(Configure.h.in "${CMAKE_CURRENT_SOURCE_DIR}/src/Configure.h" @ONLY)
+configure_file(Configure.h.in "${CMAKE_CURRENT_SOURCE_DIR}/src/ATL/Configure.h" @ONLY)
 
 # To build shared libraries in Windows, we set CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS to TRUE.
 # See https://cmake.org/cmake/help/v3.4/variable/CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS.html
@@ -29,13 +29,9 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 # Create our library target.
 add_library(atl SHARED)
 
-file(GLOB ATL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
-file(GLOB ATL_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h")
-
-target_sources(atl PRIVATE
-	${ATL_SOURCES}
-	${ATL_HEADERS}
-)
+file(GLOB ATL_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/ATL/*.cpp")
+file(GLOB ATL_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/src/ATL/*.h")
+target_sources(atl PRIVATE ${ATL_SOURCES} ${ATL_HEADERS})
 
 # This will name our output to 'atl.1.0'.
 # For now we have to set the NO_SONAME property because i saved everything inside a Google Drive

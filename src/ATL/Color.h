@@ -56,11 +56,11 @@ namespace Atl
         {
             struct 
             {
-                int8_t red, green, blue, alpha;
+                uint8_t red, green, blue, alpha;
             };
 
-            int32_t all;
-            int8_t channels[4];
+            uint32_t all;
+            uint8_t channels[4];
 
         } mChannels;
 
@@ -68,36 +68,36 @@ namespace Atl
         RGBAuColor();
 
         //! @brief Constructs a RGBAuColor from 4 8 bits values.
-        RGBAuColor(int8_t r, int8_t g, int8_t b, int8_t a = 255);
+        RGBAuColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255);
 
         //! @brief Constructs a RGBAuColor from a RGBAColor.
         explicit RGBAuColor(const RGBAColor& rhs);
 
         //! @brief Returns the red channel.
-        inline int8_t& red() { return mChannels.red; }
+        inline uint8_t& red() { return mChannels.red; }
         //! @brief Returns the green channel.
-        inline int8_t& green() { return mChannels.green; }
+        inline uint8_t& green() { return mChannels.green; }
         //! @brief Returns the blue channel.
-        inline int8_t& blue() { return mChannels.blue; }
+        inline uint8_t& blue() { return mChannels.blue; }
         //! @brief Returns the alpha channel.
-        inline int8_t& alpha() { return mChannels.alpha; }
+        inline uint8_t& alpha() { return mChannels.alpha; }
 
         //! @brief Returns the red channel.
-        inline const int8_t& red() const { return mChannels.red; }
+        inline const uint8_t& red() const { return mChannels.red; }
         //! @brief Returns the green channel.
-        inline const int8_t& green() const { return mChannels.green; }
+        inline const uint8_t& green() const { return mChannels.green; }
         //! @brief Returns the blue channel.
-        inline const int8_t& blue() const { return mChannels.blue; }
+        inline const uint8_t& blue() const { return mChannels.blue; }
         //! @brief Returns the alpha channel.
-        inline const int8_t& alpha() const { return mChannels.alpha; }
+        inline const uint8_t& alpha() const { return mChannels.alpha; }
 
         //! @brief Returns the 32 bits value.
-        inline int32_t& value() { return mChannels.all; }
+        inline uint32_t& value() { return mChannels.all; }
         //! @brief Returns the 32 bits value.
-        inline const int32_t& value() const { return mChannels.all; }
+        inline const uint32_t& value() const { return mChannels.all; }
 
         //! @brief Converts a float channel to a 8 bits channel.
-        static inline int8_t ChannelFrom(float channel) { return static_cast < int8_t >(channel * 255); }
+        static inline uint8_t ChannelFrom(float channel) { return static_cast < uint8_t >(channel * 255); }
     };
 }
 

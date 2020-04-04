@@ -159,13 +159,13 @@
 
 // NOTES: We cannot include system headers because this would require a system available
 // GLM, which may not be the case on, for example, Windows platforms (or even macOS). So 
-// we directly includes the library from our libs dir (from here, '../libs/glm/' as prefix).
+// we directly includes the library from our libs dir (from here, '../../libs/glm/' as prefix).
 
-#include "../libs/glm/glm/glm.hpp"
-#include "../libs/glm/glm/gtc/quaternion.hpp"
-#include "../libs/glm/glm/gtx/quaternion.hpp"
-#include "../libs/glm/glm/gtx/transform.hpp"
-#include "../libs/glm/glm/gtx/matrix_decompose.hpp"
+#include "../../libs/glm/glm/glm.hpp"
+#include "../../libs/glm/glm/gtc/quaternion.hpp"
+#include "../../libs/glm/glm/gtx/quaternion.hpp"
+#include "../../libs/glm/glm/gtx/transform.hpp"
+#include "../../libs/glm/glm/gtx/matrix_decompose.hpp"
 
 namespace Atl
 {
