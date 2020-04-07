@@ -88,4 +88,14 @@ namespace Atl
             }
         }
     }
+
+    void RenderCommand::lock() const
+    {
+        mMutex.lock();
+    }
+
+    void RenderCommand::unlock() const
+    {
+        mMutex.unlock();
+    }
 }

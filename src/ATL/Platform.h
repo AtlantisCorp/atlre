@@ -10,7 +10,10 @@
 #define Platform_h
 
 #include "Configure.h"
+
 #include <variant>
+#include <future>
+#include <functional>
 
 // ------------------------------------------------------------------------------------
 // Platform Macros
@@ -204,5 +207,9 @@ namespace Atl
 static std::shared_ptr < T > New(Args&&... args) { \
     return std::make_shared < T >(std::forward < Args >(args)...); \
 }
+
+//! @brief Defines a Generic Handle.
+//! This handle can be used for any platform specific handles.
+typedef void* GenHandle;
 
 #endif /* Platform_h */

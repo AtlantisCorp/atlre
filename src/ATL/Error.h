@@ -25,6 +25,9 @@ namespace Atl
         std::string mWhat;
         
     public:
+
+        //! @brief Constructs an empty Error.
+        Error() = default;
         
         Error(const char* className, const char* fnName, const char* format, ...);
         const char* what() const noexcept;

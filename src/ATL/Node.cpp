@@ -165,6 +165,8 @@ namespace Atl
             if (node->isTouched())
                 return true;
         }
+
+        return false;
     }
 
     Node::Shared Node::parent() const

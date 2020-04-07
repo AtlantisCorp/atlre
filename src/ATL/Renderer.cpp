@@ -10,6 +10,9 @@
 
 namespace Atl
 {
+    // --------------------------------------------------------------------------------------------
+    // Renderer
+
     Renderer::Renderer(Manager& manager, const std::string& name)
     : TResource(manager, name), mSurfaces(*this), mBuffManager(*this)
     {
@@ -97,6 +100,58 @@ namespace Atl
     {
         return mBuffManager;
     }
+
+    std::future < ShaderPtr > Renderer::newShader(const std::string& name, const std::string& filename, ShaderType type, const Params& params)
+    {
+        return std::async(std::launch::async, [this, name, filename, type, params]
+        {
+            LockableGuard l(*this);
+
+            ShaderPtr shader = mShaderManager.findName(name);
+
+            if (shader && !(shader->filename() == filename))
+                throw AlreadyLoaded("Renderer", "newShader", "Shader %s already loaded with file %s.", 
+                    name.data(), shader->filename().data());
+
+            if (!shader)
+            {
+                shader = _createShader(*this, name);
+                if (!shader)
+                    throw NullError("Renderer", "newShader", "Cannot create shader %s.", 
+                        name.data());
+                shader->load(type, filename, params).get();
+                mShaderManager.add(shader);
+            }
+
+            return shader;
+        });
+    }
+
+    std::future < RenderPipelinePtr > Renderer::newPipeline(const std::string& name, bool checkUnique)
+    {
+        return std::async(std::launch::async, [this, name, checkUnique]
+        {
+            LockableGuard l(*this);
+
+            RenderPipelinePtr pipeline = mPipelineManager.findName(name);
+
+            if (pipeline) 
+            {
+                if (checkUnique)
+                    throw AlreadyLoaded("Renderer", "newPipeline", "Pipeline %s is not a unique name.",
+                        name.data());
+                return pipeline;
+            }
+
+            pipeline = _createPipeline(*this, name);
+            mPipelineManager.add(pipeline);
+
+            return pipeline;
+        });
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // ModuleRendererLoader
     
     void ModuleRendererLoader::load(Renderer &rhs, const std::string &filename, const Params &params)
     {

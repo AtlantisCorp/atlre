@@ -16,6 +16,7 @@
 
 #include "RenderHdwBufferManager.h"
 #include "RenderHdwBuffer.h"
+#include "RenderPipeline.h"
 
 namespace Atl
 {
@@ -70,8 +71,8 @@ namespace Atl
     };
 
     //! @brief Defines an object that renders other objects.
-    class Renderer :
-        virtual public TResource < Renderer, RendererManager >
+    class Renderer : public TResource < Renderer, RendererManager >,
+                     public Lockable
     {
         mutable std::mutex mMutex;
         
@@ -86,6 +87,12 @@ namespace Atl
         
         //! @brief The RenderHdwBuffer manager.
         RenderHdwBufferManager mBuffManager;
+
+        //! @brief The RenderPipeline manager.
+        RenderPipelineManager mPipelineManager;
+
+        //! @brief The ShaderManager.
+        ShaderManager mShaderManager;
         
     public:
         
@@ -167,6 +174,47 @@ namespace Atl
 
         //! @brief Returns the \ref RenderHdwBufferManager for this Renderer.
         const RenderHdwBufferManager& hdwBufferManager() const;
+
+        //! @brief Returns \ref mPipelineManager.
+        inline RenderPipelineManager& pipelineManager() { return mPipelineManager; }
+        //! @brief Returns \ref mPipelineManager.
+        inline const RenderPipelineManager& pipelineManager() const { return mPipelineManager; }
+
+        //! @brief Returns \ref mShaderManager.
+        inline ShaderManager& shaderManager() { return mShaderManager; }
+        //! @brief Returns \ref mShaderManager.
+        inline const ShaderManager& shaderManager() const { return mShaderManager; }
+
+        //! @brief Creates a new Shader. 
+        //! \param name The Shader's name. If a Shader of name already exists, and its filename
+        //! is different, it returns an AlreadyLoaded error.
+        //! \param filename The Shader's file where to load the shader's program.
+        //! \param type The Shader's stage (\ref ShaderType).
+        //! \param params A Params structure to pass to the implementation.
+        //! This function locks the Renderer and calls _createShader(), only if the Shader is not found
+        //! in mShaderManager. This way we don't have to load a shader multiple times. Also, \ref Shader::load()
+        //! is called after _createShader().
+        virtual std::future < ShaderPtr > newShader(const std::string& name, const std::string& filename, ShaderType type, const Params& params);
+
+        //! @brief Creates a new Shader.
+        //! This function only calls std::make_shared on the custom derived Shader class.
+        //! \param renderer This renderer we must pass to Shader() constructor.
+        //! \param name The Shader's name.
+        virtual ShaderPtr _createShader(Renderer& renderer, const std::string& name) const = 0;
+
+        //! @brief Creates a new RenderPipeline.
+        //! \param name The pipeline's name. If the pipeline is already found in the pipeline manager,
+        //! then this render pipeline is returned. If checkUnique is true, then it throws an
+        //! AlreadyLoaded error.
+        //! \param checkUnique Boolean true if you want to assert that the pipeline you are creating
+        //! is unique and not already used in the pipeline manager. False for default value.
+        virtual std::future < RenderPipelinePtr > newPipeline(const std::string& name, bool checkUnique = false);
+
+        //! @brief Creates a new RenderPipeline.
+        //! This function only calls std::make_shared on the custom derived RenderPipeline class.
+        //! \param renderer This renderer we must pass to RenderPipeline() constructor.
+        //! \param name The RenderPipeline's name.
+        virtual RenderPipelinePtr _createPipeline(Renderer& renderer, const std::string& name) const = 0;
     };
     
     template < >

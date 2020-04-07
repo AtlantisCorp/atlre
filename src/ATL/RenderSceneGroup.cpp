@@ -160,17 +160,20 @@ namespace Atl
                 return;
 
             std::lock_guard l(mMutex);
+            LockableGuard ll(command);
 
             for (auto const& pair : mCommandForScene)
             {
                 const RenderScene& scene = sceneAt(pair.second);
-                RenderCommand& command = const_cast < RenderCommand& >(commandAt(pair.first));
+                RenderCommand& subcommand = const_cast < RenderCommand& >(commandAt(pair.first));
 
                 if (!scene.isTouched())
                     continue;
 
-                command.removeAllSubCommands();
-                scene.render(command);
+                subcommand.removeAllSubCommands();
+                scene.render(subcommand);
+
+                command.addSubCommand(subcommand.shared_from_this());
             }
         });
     }

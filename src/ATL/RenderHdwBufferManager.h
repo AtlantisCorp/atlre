@@ -20,10 +20,10 @@ namespace Atl
     
     //! @brief A Manager for all RenderHdwBuffer.
     class RenderHdwBufferManager :
-        public RenderObjectManager <
-        RenderHdwBuffer,
-        RenderHdwBufferFactory >,
-        public MemoryPoolListener
+    public RenderObjectManager <
+    RenderHdwBuffer,
+    RenderHdwBufferFactory >,
+    public MemoryPoolListener
     {
         //! @brief An observer allocated by this class to observer any size changes upon
         //! hardware render buffers.

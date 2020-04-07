@@ -11,6 +11,7 @@
 #include "Platform.h"
 #include "Factory.h"
 #include "RenderObject.h"
+#include "Lockable.h"
 
 #include <memory>
 #include <vector>
@@ -38,7 +39,9 @@ namespace Atl
     //! If your custom command doesn't need a construct() method, don't add it as it may confuse
     //! possible users if they should construct it or not (the construct() method may be called
     //! way after for performance optimization).
-    class EXPORTED RenderCommandBase : public RenderObject
+    class EXPORTED RenderCommandBase : 
+    public std::enable_shared_from_this < RenderCommandBase >,
+    public RenderObject
     {
     public:
         
@@ -62,13 +65,16 @@ namespace Atl
     typedef std::vector < RenderCommandBasePtr > RenderCommandBaseList;
     
     //! @brief A basic RenderCommand that enables sub commands to be rendered.
-    class EXPORTED RenderCommand : public RenderCommandBase
+    class EXPORTED RenderCommand : 
+    public RenderCommandBase,
+    public Lockable
     {
         //! @brief The sub commands regitered for this command.
         RenderCommandBaseList mSubCommands;
         
-        //! @brief Mutex for data.
-        mutable std::mutex mMutex;
+        //! @brief Mutex for data. Recursive because we want to be able to locks
+        //! the RenderCommand for a long period of time through LockableGuard.
+        mutable std::recursive_mutex mMutex;
         
     public:
         
@@ -113,6 +119,12 @@ namespace Atl
         //! @brief Calls, for each sub command, the prepare/render/finish pipeline
         //! in order to render all sub commands in the correct order.
         virtual void render();
+
+        //! @brief Locks the command for the current thread.
+        virtual void lock() const;
+
+        //! @brief Unlocks the command for other threads.
+        virtual void unlock() const;
     };
     
     typedef std::shared_ptr < RenderCommand > RenderCommandPtr;
