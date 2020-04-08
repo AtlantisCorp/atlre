@@ -150,6 +150,29 @@ namespace Atl
         });
     }
 
+    RenderPassPtr Renderer::newPass(const std::string& name, const RenderPipelinePtr& pipeline, const RenderCommandPtr& command, bool checkUnique)
+    {
+        LockableGuard l(*this);
+
+        RenderPassPtr pass = mPassManager.findName(name);
+
+        if (pass)
+        {
+            if (checkUnique)
+                throw AlreadyLoaded("Renderer", "newPass", "Pass %s is not a unique name.",
+                    name.data());
+            
+            pass->setPipeline(pipeline);
+            pass->setCommand(command);
+            return pass;
+        }
+
+        pass = RenderPass::New(*this, pipeline, command, name);
+        mPassManager.add(pass);
+
+        return pass;
+    }
+
     // --------------------------------------------------------------------------------------------
     // ModuleRendererLoader
     

@@ -8,15 +8,16 @@
 #ifndef Renderer_h
 #define Renderer_h
 
-#include "RenderCommand.h"
-#include "RenderCacheFactory.h"
 #include "Resource.h"
 #include "Emitter.h"
-#include "RenderWindow.h"
 
+#include "RenderWindow.h"
 #include "RenderHdwBufferManager.h"
 #include "RenderHdwBuffer.h"
 #include "RenderPipeline.h"
+#include "RenderPass.h"
+#include "RenderCommand.h"
+#include "RenderCacheFactory.h"
 
 namespace Atl
 {
@@ -93,6 +94,9 @@ namespace Atl
 
         //! @brief The ShaderManager.
         ShaderManager mShaderManager;
+
+        //! @brief The Pass Manager.
+        RenderPassManager mPassManager;
         
     public:
         
@@ -185,6 +189,11 @@ namespace Atl
         //! @brief Returns \ref mShaderManager.
         inline const ShaderManager& shaderManager() const { return mShaderManager; }
 
+        //! @brief Returns \ref mPassManager.
+        inline RenderPassManager& passManager() { return mPassManager; }
+        //! @brief Returns \ref mPassManager.
+        inline const RenderPassManager& passManager() const { return mPassManager; }
+
         //! @brief Creates a new Shader. 
         //! \param name The Shader's name. If a Shader of name already exists, and its filename
         //! is different, it returns an AlreadyLoaded error.
@@ -215,6 +224,16 @@ namespace Atl
         //! \param renderer This renderer we must pass to RenderPipeline() constructor.
         //! \param name The RenderPipeline's name.
         virtual RenderPipelinePtr _createPipeline(Renderer& renderer, const std::string& name) const = 0;
+
+        //! @brief Creates a new RenderPass.
+        //! \param name The RenderPass name. If the pass is already found in the pass manager, then 
+        //! this pass is returned, except if checkUnique is true, in this case it throws an
+        //! AlreadyLoaded error.
+        //! \param pipeline The RenderPipeline to use with this Pass.
+        //! \param command The RenderCommand to render the Pass.
+        //! \param checkUnique Boolean true if you want to assert that the pass you are creating
+        //! is unique and not already used in the pass manager. False for default value.
+        virtual RenderPassPtr newPass(const std::string& name, const RenderPipelinePtr& pipeline, const RenderCommandPtr& command, bool checkUnique = false);
     };
     
     template < >
