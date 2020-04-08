@@ -233,6 +233,9 @@ namespace Atl
         //! @brief Unlocks \ref mMutex.
         virtual inline void unlock() const { mMutex.unlock(); }
 
+        //! @brief Binds the pipeline for proper use.
+        virtual void bind() = 0;
+
         protected:
 
         //! @brief Unloads the RenderPipeline.

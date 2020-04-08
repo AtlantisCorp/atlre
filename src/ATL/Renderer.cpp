@@ -53,10 +53,29 @@ namespace Atl
     {
         return std::async(std::launch::async, [&target, &command]()
         {
+            LockableGuard l(target);
             target.bind();
+
             command.prepare();
             command.render();
             command.finish();
+        });
+    }
+
+    std::future < void > Renderer::render(RenderTarget& target, RenderPass& pass)
+    {
+        return std::async(std::launch::async, [&target, &pass]()
+        {
+            LockableGuard l(target);
+            target.bind();
+            
+            RenderPipelinePtr pipeline = pass.pipeline();
+            RenderCommandPtr command = pass.command();
+
+            pipeline->bind();
+            command->prepare();
+            command->render();
+            command->finish();
         });
     }
     
@@ -167,7 +186,7 @@ namespace Atl
             return pass;
         }
 
-        pass = RenderPass::New(*this, pipeline, command, name);
+        pass = RenderPass::New(*this, name, pipeline, command);
         mPassManager.add(pass);
 
         return pass;

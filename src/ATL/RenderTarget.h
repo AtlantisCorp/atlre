@@ -9,13 +9,15 @@
 #define RenderTarget_h
 
 #include "RenderObject.h"
+#include "Lockable.h"
 
 namespace Atl
 {
     //! @brief Interface for all rendering target.
     //! A RenderTarget is an object that can be used (with \ref bind()) to draw RenderCommands
     //! in itself. The Renderer use it with \ref Renderer::render() to draw a RenderCommand.
-    class EXPORTED RenderTarget : public RenderObject
+    class EXPORTED RenderTarget : public RenderObject,
+                                  public Lockable
     {
     public:
         using RenderObject::RenderObject;

@@ -153,6 +153,9 @@ namespace Atl
         
         //! @brief Renders a command into a target.
         std::future < void > render(RenderTarget& target, RenderCommand& command);
+
+        //! @brief Renders a RenderPass into a RenderTarget.
+        std::future < void > render(RenderTarget& target, RenderPass& pass);
         
         //! @brief Returns always Zero.
         inline std::size_t usedSize() const { return 0; }

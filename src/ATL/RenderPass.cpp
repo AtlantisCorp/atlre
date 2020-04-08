@@ -10,6 +10,17 @@
 
 namespace Atl
 {
+    // --------------------------------------------------------------------------------------------
+    // RenderPassManager
+
+    RenderPassPtr RenderPassManager::findName(const std::string& name) const 
+    {
+        return find([&name](const RenderPassPtr& rhs){ return rhs->name() == name; });
+    }
+
+    // --------------------------------------------------------------------------------------------
+    // RenderPass
+
     RenderPass::RenderPass(Renderer& renderer, const std::string& name, const RenderPipelinePtr& pipeline, const RenderCommandPtr& command)
     : RenderObject(renderer), Named(name)
     , mPipeline(pipeline)
