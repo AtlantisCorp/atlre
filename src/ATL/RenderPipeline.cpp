@@ -20,6 +20,17 @@ namespace Atl
     }
 
     // --------------------------------------------------------------------------------------------
+    // AliasInfos
+
+    RenderPipeline::AliasInfos::AliasInfos(const std::string& alias, const std::string& name, ShaderType shader, int location)
+    {
+        mAliasName = alias;
+        mRealName = name;
+        mShader = shader;
+        mLocation = location;
+    }
+
+    // --------------------------------------------------------------------------------------------
     // RenderPipeline
 
     RenderPipeline::RenderPipeline(Renderer& renderer, const std::string& name)
@@ -103,6 +114,20 @@ namespace Atl
         for (auto& pair : aliases)
         {
             _setAlias(pair.first, pair.second);
+        }
+    }
+
+    void RenderPipeline::setAliasesInfos(const std::vector < AliasInfos >& infos)
+    {
+        if (!isLoaded())
+            throw Error("RenderPipeline", "setAliases", "Pipeline %s not loaded. Please call ::build() before.",
+                name().data());
+
+        LockableGuard l(*this);
+
+        for (auto& alias : infos)
+        {
+            _setAlias(alias.mAliasName, (AliasValue&)alias);
         }
     }
 

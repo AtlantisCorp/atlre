@@ -100,6 +100,16 @@ namespace Atl
         //! @brief Defines an association between an Alias and an AliasValue structure.
         typedef std::map < std::string, AliasValue > AliasesMap;
 
+        //! @brief Defines an infos structure to send when constructing multiple aliases values.
+        struct AliasInfos : public AliasValue
+        {
+            //! @brief The Alias name.
+            std::string mAliasName;
+
+            //! @brief Constructs a new AliasInfos.
+            AliasInfos(const std::string& alias, const std::string& name, ShaderType shader, int location = -1);
+        };
+
         //! @brief Defines a very basic uniform structur.
         struct Uniform 
         {
@@ -166,6 +176,10 @@ namespace Atl
         //! a call to this function, because it involves \ref findUniformName(), \ref findUniformIndex()
         //! and other look up functions.
         virtual void setAliases(const AliasesMap& aliases);
+
+        //! @brief Sets multiple Aliases at the same time.
+        //! This is a much easier function because you can directly pass a vector of AliasInfos.
+        virtual void setAliasesInfos(const std::vector < AliasInfos >& infos);
 
         //! @brief Sets one Alias.
         //! The real name must be present in the pipeline. The pipeline must be build() before
